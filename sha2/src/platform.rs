@@ -57,6 +57,7 @@ impl Implementation {
         return Some(Implementation(Platform::Asm));
     }
 
+    #[inline]
     pub fn compress256(&self, state: &mut [u32; 8], block: &[u8; 64]) {
         match self.0 {
             Platform::Portable => {
@@ -66,7 +67,7 @@ impl Implementation {
             #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
             Platform::Sha => {
                 use sha256_intrinsics;
-                sha256_intrinsics::compress256(state, block);
+                unsafe { sha256_intrinsics::compress256(state, block) };
             }
             #[cfg(feature = "asm")]
             Platform::Asm => {
