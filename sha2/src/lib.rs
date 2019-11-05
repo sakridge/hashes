@@ -55,25 +55,28 @@
 //! [1]: https://en.wikipedia.org/wiki/SHA-2
 //! [2]: https://github.com/RustCrypto/hashes
 #![no_std]
-#![doc(html_logo_url =
-    "https://raw.githubusercontent.com/RustCrypto/meta/master/logo_small.png")]
+#![doc(html_logo_url = "https://raw.githubusercontent.com/RustCrypto/meta/master/logo_small.png")]
 extern crate block_buffer;
 extern crate fake_simd as simd;
-#[macro_use] extern crate opaque_debug;
-#[macro_use] pub extern crate digest;
+#[macro_use]
+extern crate opaque_debug;
+#[macro_use]
+pub extern crate digest;
 #[cfg(feature = "asm")]
 extern crate sha2_asm;
 #[cfg(feature = "std")]
 extern crate std;
 
 mod consts;
-#[cfg(not(feature = "asm"))]
+mod platform;
+mod sha256;
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+mod sha256_intrinsics;
 mod sha256_utils;
+mod sha512;
 #[cfg(not(feature = "asm"))]
 mod sha512_utils;
-mod sha256;
-mod sha512;
 
 pub use digest::Digest;
-pub use sha256::{Sha256, Sha224};
-pub use sha512::{Sha512, Sha384, Sha512Trunc224, Sha512Trunc256};
+pub use sha256::{Sha224, Sha256};
+pub use sha512::{Sha384, Sha512, Sha512Trunc224, Sha512Trunc256};
