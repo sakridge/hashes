@@ -54,7 +54,8 @@
 //!
 //! [1]: https://en.wikipedia.org/wiki/SHA-2
 //! [2]: https://github.com/RustCrypto/hashes
-#![no_std]
+
+//#![no_std]
 #![doc(html_logo_url =
     "https://raw.githubusercontent.com/RustCrypto/meta/master/logo_small.png")]
 extern crate block_buffer;
@@ -63,8 +64,8 @@ extern crate fake_simd as simd;
 #[macro_use] pub extern crate digest;
 #[cfg(feature = "asm")]
 extern crate sha2_asm;
-#[cfg(feature = "std")]
-extern crate std;
+//#[cfg(feature = "std")]
+//extern crate std;
 
 mod consts;
 #[cfg(not(feature = "asm"))]

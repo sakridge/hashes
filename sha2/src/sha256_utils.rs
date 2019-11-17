@@ -98,6 +98,10 @@ fn sha256_digest_round_x2(cdgh: u32x4, abef: u32x4, wk: u32x4) -> u32x4 {
     u32x4(a2, b2, e2, f2)
 }
 
+fn print_u32x4(name: &'static str, vec: u32x4) {
+    println!("{} {:x} {:x} {:x} {:x}", name, vec.0, vec.1, vec.2, vec.3);
+}
+
 /// Process a block with the SHA-256 algorithm.
 fn sha256_digest_block_u32(state: &mut [u32; 8], block: &[u32; 16]) {
     let k = &K32X4;
@@ -120,9 +124,16 @@ fn sha256_digest_block_u32(state: &mut [u32; 8], block: &[u32; 16]) {
     let mut abef = u32x4(state[0], state[1], state[4], state[5]);
     let mut cdgh = u32x4(state[2], state[3], state[6], state[7]);
 
+    print_u32x4("abef.0", abef);
+    print_u32x4("cdgh.0", cdgh);
+
     // Rounds 0..64
     let mut w0 = u32x4(block[3], block[2], block[1], block[0]);
     rounds4!(abef, cdgh, k[0] + w0);
+
+    print_u32x4("abef.4", abef);
+    print_u32x4("cdgh.4", cdgh);
+
     let mut w1 = u32x4(block[7], block[6], block[5], block[4]);
     rounds4!(abef, cdgh, k[1] + w1);
     let mut w2 = u32x4(block[11], block[10], block[9], block[8]);
@@ -153,6 +164,9 @@ fn sha256_digest_block_u32(state: &mut [u32; 8], block: &[u32; 16]) {
     rounds4!(abef, cdgh, k[14] + w4);
     w0 = schedule!(w1, w2, w3, w4);
     rounds4!(abef, cdgh, k[15] + w0);
+
+    print_u32x4("abef.f", abef);
+    print_u32x4("cdgh.f", cdgh);
 
     let u32x4(a, b, e, f) = abef;
     let u32x4(c, d, g, h) = cdgh;
