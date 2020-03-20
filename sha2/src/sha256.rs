@@ -33,7 +33,7 @@ impl Engine256State {
 /// A structure that keeps track of the state of the Sha-256 operation and
 /// contains the logic necessary to perform the final calculations.
 #[derive(Clone)]
-struct Engine256 {
+pub struct Engine256 {
     len: u64,
     buffer: BlockBuffer<BlockSize>,
     state: Engine256State,
@@ -55,7 +55,7 @@ impl Engine256 {
         self.buffer.input(input, |input| self_state.process_block(input));
     }
 
-    fn finish(&mut self) {
+    pub fn finish(&mut self) {
         let self_state = &mut self.state;
         let l = self.len;
         self.buffer.len64_padding::<BE, _>(l, |b| self_state.process_block(b));
@@ -72,7 +72,7 @@ impl Engine256 {
 /// The SHA-256 hash algorithm with the SHA-256 initial hash value.
 #[derive(Clone)]
 pub struct Sha256 {
-    engine: Engine256,
+    pub engine: Engine256,
 }
 
 impl Default for Sha256 {
